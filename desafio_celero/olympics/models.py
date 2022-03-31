@@ -64,8 +64,8 @@ class Athlete(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=128)
     sex = models.CharField(verbose_name=_('Sex'), choices=Sex.choices, max_length=1)
     age = models.IntegerField(verbose_name=_('Age'), blank=True, null=True)
-    height = models.IntegerField(verbose_name=_('Height'), blank=True, null=True)
-    weight = models.IntegerField(verbose_name=_('Weight'), blank=True, null=True)
+    height = models.DecimalField(verbose_name=_('Height'), max_digits=5, decimal_places=2, blank=True, null=True)
+    weight = models.DecimalField(verbose_name=_('Weight'), max_digits=5, decimal_places=2, blank=True, null=True)
     team = models.CharField(verbose_name=_('Team/Country'), max_length=128)
     noc = models.CharField(verbose_name=_('National Olympic Committee'), max_length=3)
 
@@ -86,7 +86,6 @@ class Medal(models.Model):
         GOLD = 'Gold', _('Gold')
         SILVER = 'Silver', _('Silver')
         BRONZE = 'Bronze', _('Bronze')
-        ZERO = '0', _('No medal')
         NA = 'NA', _('No medal')
 
     medal = models.CharField(verbose_name=_('Medal'), choices=MedalName.choices, max_length=16, blank=True, null=True)

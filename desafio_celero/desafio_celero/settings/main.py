@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
+from kombu import Exchange, Queue
+from celery.schedules import crontab
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,7 +47,9 @@ LOCAL_APPS = [
 
 EXTERNAL_APPS = [
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'django_celery_beat',
+    'django_celery_results'
 ]
 
 INSTALLED_APPS = INTERNAL_APPS + LOCAL_APPS + EXTERNAL_APPS
@@ -82,7 +86,6 @@ WSGI_APPLICATION = 'desafio_celero.wsgi.application'
 
 ASGI_APPLICATION = 'desafio_celero.asgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -96,7 +99,6 @@ DATABASES = {
         'PORT': os.environ.get('SQL_PORT', '5432')
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -115,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -143,7 +144,6 @@ USE_TZ = True
 
 DATE_FORMAT = "%d/%m/%Y %H:%M:%S"
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -163,11 +163,41 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# RabbitMQ and Celery config
+
+user = os.getenv('RABBITMQ_DEFAULT_USER')
+password = os.getenv('RABBITMQ_DEFAULT_PASS')
+host = os.getenv('RABBITMQ_HOST')
+port = os.getenv('RABBITMQ_PORT')
+vhost = os.getenv('RABBITMQ_DEFAULT_VHOST')
+CELERY_BROKER_URL = f'amqp://{user}:{password}@{host}:{port}/{vhost}'
+
+BROKER_POOL_LIMIT = 100  # the maximum number of connections that can be open in the connection pool
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_IGNORE_RESULT = True
+
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_EXCHANGE = 'default'
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default_tasks'),
+)
+
+CELERY_ROUTES = {
+    '*': {
+        'queue': 'default', 'routing_key': 'default_tasks',
+    }
+}
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+# Logging
 
 LOGGING = {
     'version': 1,
@@ -196,6 +226,14 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'console',
+        },
+        'celery': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/desafio_celero/celery.log',
+            'formatter': 'console',
+            'maxBytes': 1024 * 1024 * 2,
+            'backupCount': 10,
         },
         'file.debug': {
             'level': 'DEBUG',
@@ -239,6 +277,11 @@ LOGGING = {
         'desafio_celero': {
             'level': 'DEBUG',
             'handlers': ['console', 'file.debug', 'file.info', 'file.error'],
+            'propagate': True,
+        },
+        'celery': {
+            'level': 'DEBUG',
+            'handlers': ['celery', 'console'],
             'propagate': True,
         },
     },

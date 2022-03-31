@@ -10,7 +10,12 @@ services:
     env_file:
       - ./desafio_celero/env/database.env
       - ./desafio_celero/env/main.env
+      - ./desafio_celero/env/rabbitmq.env
 
   postgres:
     env_file:
       - ./desafio_celero/env/database.env
+
+  rabbitmq:
+    env_file:
+      - ./desafio_celero/env/rabbitmq.env
