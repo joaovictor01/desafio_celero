@@ -168,3 +168,78 @@ STATICFILES_FINDERS = (
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '[%(levelname)s] %(message)s',
+        },
+        'file': {
+            'format': '[%(asctime)s] [%(levelname)s] %(message)s',
+        },
+    },
+    'filters': {
+        'debug': {
+            '()': 'olympics.log_filters.DebugFilter',
+        },
+        'info': {
+            '()': 'olympics.log_filters.InfoFilter',
+        },
+        'error': {
+            '()': 'olympics.log_filters.ErrorFilter',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+        'file.debug': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/desafio_celero/django_debug.log',
+            'formatter': 'file',
+            'maxBytes': 1024 * 1024 * 2,
+            'backupCount': 10,
+            'filters': ['debug'],
+        },
+        'file.info': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/desafio_celero/django_info.log',
+            'formatter': 'file',
+            'maxBytes': 1024 * 1024 * 2,
+            'backupCount': 10,
+            'filters': ['info'],
+        },
+        'file.error': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/desafio_celero/django_error.log',
+            'formatter': 'file',
+            'maxBytes': 1024 * 1024 * 2,
+            'backupCount': 10,
+            'filters': ['error'],
+        },
+    },
+    'loggers': {
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file.debug', 'file.info', 'file.error'],
+            'propagate': True,
+        },
+        'olympics': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file.debug', 'file.info', 'file.error'],
+            'propagate': True,
+        },
+        'desafio_celero': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file.debug', 'file.info', 'file.error'],
+            'propagate': True,
+        },
+    },
+}

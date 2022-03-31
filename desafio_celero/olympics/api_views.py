@@ -1,7 +1,13 @@
 """App API views."""
 from rest_framework import viewsets, filters
+from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
 from olympics.models import Athlete, Event, Game, Medal
-from olympics.serializers import AthleteSerializer, EventSerializer, GameSerializer, MedalSerializer
+from olympics.serializers import AthleteSerializer, EventSerializer, GameSerializer, MedalSerializer,\
+    CSVFileUploadSerializer
+from olympics.utils import parse_csv
 
 
 class AthleteViewSet(viewsets.ModelViewSet):
@@ -26,3 +32,14 @@ class MedalViewSet(viewsets.ModelViewSet):
     """Event API ViewSet"""
     queryset = Medal.objects.all()
     serializer_class = MedalSerializer
+
+
+class CSVFileUploadAPIView(CreateAPIView):
+    serializer_class = CSVFileUploadSerializer
+
+    def post(self, request, format=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        csv_file = serializer.validated_data['csv_file']
+        parse_csv(csv_file)
+        return Response(status=204)
