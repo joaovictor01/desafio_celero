@@ -1,14 +1,11 @@
 """App API views."""
-import os
 from rest_framework import viewsets, filters
 from rest_framework.generics import CreateAPIView
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from olympics.models import Athlete, Event, Game, Medal
 from olympics.serializers import AthleteSerializer, EventSerializer, GameSerializer, MedalSerializer,\
     CSVFileUploadSerializer
-from olympics.tasks import csv_to_json, parse_json_content
+from olympics.tasks import parse_json_content
 from django.core.files.storage import FileSystemStorage
 
 
