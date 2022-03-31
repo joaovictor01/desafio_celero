@@ -3,7 +3,7 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$260000$KuS0xdconnk0c536HrsfnR$+djrCtUtD1zLvY8aSsqcLHJncNtKd7pakNVn7x1bQ3Q=",
+        "password": "pbkdf2_sha256$260000$yViy5qSptxFITkDUuqAAsd$aRl9F6Ffk4lwwLnQtnRs2DaMR/JGenYUIOSWKDQxJBk=",
         "last_login": null,
         "is_superuser": true,
         "username": "admin",
@@ -12,7 +12,7 @@
         "email": "admin@admin.com",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2022-03-30T17:41:38.388Z",
+        "date_joined": "2022-03-31T03:18:51.629Z",
         "groups": [],
         "user_permissions": []
     }

@@ -1,5 +1,4 @@
 """App models."""
-import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -41,7 +40,7 @@ class Game(models.Model):
     year = models.IntegerField(verbose_name=_('Year'))
     season = models.CharField(verbose_name=_('Season'), choices=Season.choices, max_length=64)
     city = models.CharField(verbose_name=_('City'), max_length=256)
-    event = models.ManyToManyField(Event, related_name='athletes', verbose_name=_('Event'), blank=True)
+    events = models.ManyToManyField(Event, related_name='games', verbose_name=_('Events'), blank=True)
 
     class Meta:
         """Game meta."""
@@ -61,10 +60,10 @@ class Athlete(models.Model):
         MALE = 'M', _('Male')
         FEMALE = 'F', _('Female')
 
-    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    id = models.IntegerField(verbose_name=_('ID'), primary_key=True)
     name = models.CharField(verbose_name=_('Name'), max_length=128)
     sex = models.CharField(verbose_name=_('Sex'), choices=Sex.choices, max_length=1)
-    age = models.IntegerField(verbose_name=_('Age'))
+    age = models.IntegerField(verbose_name=_('Age'), blank=True, null=True)
     height = models.IntegerField(verbose_name=_('Height'), blank=True, null=True)
     weight = models.IntegerField(verbose_name=_('Weight'), blank=True, null=True)
     team = models.CharField(verbose_name=_('Team/Country'), max_length=128)
@@ -87,9 +86,10 @@ class Medal(models.Model):
         GOLD = 'Gold', _('Gold')
         SILVER = 'Silver', _('Silver')
         BRONZE = 'Bronze', _('Bronze')
+        ZERO = '0', _('No medal')
         NA = 'NA', _('No medal')
 
-    medal = models.CharField(verbose_name=_('Medal'), choices=MedalName.choices, max_length=16)
+    medal = models.CharField(verbose_name=_('Medal'), choices=MedalName.choices, max_length=16, blank=True, null=True)
     athlete = models.ForeignKey('olympics.Athlete', verbose_name=_('Athlete'), on_delete=models.CASCADE)
     event = models.ForeignKey('olympics.Event', verbose_name=_('Event'), on_delete=models.CASCADE)
     game = models.ForeignKey('olympics.Game', verbose_name=_('Game'), on_delete=models.CASCADE)
@@ -98,5 +98,5 @@ class Medal(models.Model):
         """Medal meta"""
         verbose_name = _('Medal')
         verbose_name_plural = _('Medals')
-        ordering = ['game']
+        ordering = ['game__year']
 
