@@ -1,0 +1,12 @@
+asgiref==3.5.0
+Django==3.2.12
+channels==3.0.4
+psycopg2==2.9.1
+django-compressor==2.4.1
+djangorestframework==3.12.4
+djangorestframework-datatables==0.6.0
+pytz==2022.1
+sqlparse==0.4.2
+certifi==2021.10.8
+numpy==1.22.3
+pandas==1.4.1

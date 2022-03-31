@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  mysql:
+    environment:
+        - MYSQL_ROOT_PASSWORD=mysql
+        - DEFAULT_MYSQL_PASS=mysql
+
+  django:
+    env_file:
+      - ./desafio_celero/env/database.env
+      - ./desafio_celero/env/main.env
+
+  postgres:
+    env_file:
+      - ./desafio_celero/env/database.env

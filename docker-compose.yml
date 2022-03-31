@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mariadb
+    container_name: ove_mysql
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - desafio_celero
+
+  django:
+    container_name: desafio_celero_django
+    restart: always
+    build:
+      context: ./desafio_celero
+      args:
+        MODE: development
+    volumes:
+      - ./desafio_celero/:/desafio_celero/
+      - ./desafio_celero/logs:/var/log/desafio_celero
+      - static:/desafio_celero/static
+      - media:/desafio_celero/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - desafio_celero
+
+  postgres:
+    container_name: desafio_celero_postgres
+    restart: always
+    image: postgres:11.6-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - desafio_celero
+
+volumes:
+  postgres_data:
+  static:
+  media:
+  mysql:
+
+networks:
+  desafio_celero:
+    name: desafio_celero
