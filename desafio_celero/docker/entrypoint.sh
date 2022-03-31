@@ -33,6 +33,19 @@ if [ "$MODE" = "development" ]; then
     echo "Done!"
 fi
 
+if [ "$MODE" = "development" ]; then
+    echo "Starting Celery..."
+    (watchmedo auto-restart --directory=/desafio_celero/ --pattern "*tasks.py"  --recursive -- \
+    celery -A desafio_celero beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler \
+    ) &
+
+    echo "\tStarting workers (1 worker, 3 if necessary)..."
+    (watchmedo auto-restart --directory=/desafio_celero/ --pattern "*tasks.py"  --recursive -- \
+    celery -A desafio_celero worker -l info -Q default --autoscale=3,1 --without-mingle --without-gossip \
+    -n default.%h) &
+    echo "Celery started!"
+fi
+
 if [ "$MODE" = "production" ]; then
     echo "Starting desafio_celero as `whoami`"
     exec gunicorn --bind :8000 --limit-request-line 8190 --workers 5 --timeout $GUNICORN_TIMEOUT \

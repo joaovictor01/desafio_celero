@@ -25,6 +25,7 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+      - rabbitmq
     networks:
       - desafio_celero
 
@@ -34,6 +35,13 @@ services:
     image: postgres:11.6-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - desafio_celero
+
+  rabbitmq:
+    container_name: desafio_celero_rabbitmq
+    image: rabbitmq:3.9.11-alpine
+    restart: always
     networks:
       - desafio_celero
 

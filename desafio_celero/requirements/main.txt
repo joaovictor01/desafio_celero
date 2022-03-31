@@ -10,3 +10,6 @@ sqlparse==0.4.2
 certifi==2021.10.8
 numpy==1.22.3
 pandas==1.4.1
+celery==5.2.3
+django-celery-beat==2.2.1
+django-celery-results==2.3.0

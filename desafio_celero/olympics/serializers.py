@@ -44,4 +44,14 @@ class MedalSerializer(serializers.ModelSerializer):
         model = Medal
         fields = '__all__'
         datatables_always_serialize = ('id',)
-        depth = 1
+        depth = 2
+
+
+class CSVFileUploadSerializer(serializers.Serializer):
+    """
+    CsvUpload Serializer
+    """
+    csv_file = serializers.FileField()
+
+    class Meta:
+        fields = ('csv_file', )

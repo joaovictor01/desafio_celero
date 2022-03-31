@@ -1,1 +1,4 @@
 -r ./main.txt
+watchdog==2.1.5
+argh==0.26.2
+PyYAML==6.0
