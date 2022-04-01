@@ -99,3 +99,6 @@ class Medal(models.Model):
         verbose_name_plural = _('Medals')
         ordering = ['game__year']
 
+    def __str__(self):
+        return self.medal
+

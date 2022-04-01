@@ -16,6 +16,6 @@ As rotas são:
 * **http://localhost:8000/api** - Rota raíz da API.
 * **http://localhost:8000/api/athletes/** - Rota dos Atletas
 * **http://localhost:8000/api/events/** - Rota dos Eventos
-* **http://localhost:8000/api/games/** - Rota dos jogos
+* **http://localhost:8000/api/games/** - Rota dos Jogos
 * **http://localhost:8000/api/medals/** - Rota das Medalhas
 * **http://localhost:8000/api/upload/** - Rota do upload do arquivo CSV.

@@ -1,5 +1,5 @@
 """App API views."""
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from olympics.models import Athlete, Event, Game, Medal
@@ -13,24 +13,32 @@ class AthleteViewSet(viewsets.ModelViewSet):
     """Athlete API ViewSet"""
     queryset = Athlete.objects.all()
     serializer_class = AthleteSerializer
+    search_fields = ['name', 'team', 'noc']
+    filter_backends = (filters.SearchFilter,)
 
 
 class EventViewSet(viewsets.ModelViewSet):
     """Event API ViewSet"""
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    search_fields = ['name']
+    filter_backends = (filters.SearchFilter,)
 
 
 class GameViewSet(viewsets.ModelViewSet):
     """Event API ViewSet"""
     queryset = Game.objects.all()
     serializer_class = GameSerializer
+    search_fields = ['name']
+    filter_backends = (filters.SearchFilter,)
 
 
 class MedalViewSet(viewsets.ModelViewSet):
     """Event API ViewSet"""
     queryset = Medal.objects.all()
     serializer_class = MedalSerializer
+    search_fields = ['medal']
+    filter_backends = (filters.SearchFilter,)
 
 
 class CSVFileUploadAPIView(CreateAPIView):
