@@ -3,7 +3,7 @@ version: '3.7'
 services:
   mysql:
     image: mariadb
-    container_name: ove_mysql
+    container_name: desafio_celero_mysql
     volumes:
       - mysql:/var/lib/mysql
     networks:
