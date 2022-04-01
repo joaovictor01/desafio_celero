@@ -27,7 +27,7 @@ class EventSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class GameSerializer(serializers.ModelSerializer):
+class GameSerializer(serializers.HyperlinkedModelSerializer):
     """
     Event Model Serializer.
     """
@@ -36,19 +36,22 @@ class GameSerializer(serializers.ModelSerializer):
         model = Game
         fields = '__all__'
         datatables_always_serialize = ('id',)
-        depth = 1
 
 
 class MedalSerializer(serializers.ModelSerializer):
     """
     Event Model Serializer.
     """
+    athlete = serializers.PrimaryKeyRelatedField(queryset=Athlete.objects.all())
+    event = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
+    game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.all())
 
     class Meta:
         model = Medal
-        fields = '__all__'
+        fields = ('medal', 'athlete', 'event', 'game')
         datatables_always_serialize = ('id', )
-        depth = 2
+        lookup_field = ('athlete', 'event', 'game')
+        depth = 3
 
 
 class CSVFileUploadSerializer(serializers.Serializer):
