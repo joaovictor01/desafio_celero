@@ -27,15 +27,18 @@ class EventSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class GameSerializer(serializers.HyperlinkedModelSerializer):
+class GameSerializer(serializers.ModelSerializer):
     """
     Event Model Serializer.
     """
+    events = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all(), many=True)
 
     class Meta:
         model = Game
         fields = '__all__'
         datatables_always_serialize = ('id',)
+        lookup_field = 'events'
+        depth = 2
 
 
 class MedalSerializer(serializers.ModelSerializer):
